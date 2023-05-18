@@ -5,32 +5,31 @@ const WIDTH: usize = 800;
 const HEIGHT: usize = 800;
 
 fn main() { 
-
+    // graphics set-up
     let mut buffer: Vec<u32> = vec![0; WIDTH * HEIGHT];
-
     let mut window = Window::new(
-        "Simple Graphics",          // Window title
-        WIDTH,                      // Window width
-        HEIGHT,                     // Window height
-        WindowOptions::default(),   // Window options (default)
+        "Barnsley Fractal",          
+        WIDTH,                      
+        HEIGHT,                     
+        WindowOptions::default(),   
     )
     .unwrap_or_else(|e| panic!("{}", e));
+    window.set_background_color(0, 0, 0);
 
-    window.set_background_color(0, 0, 0); // Black
 
     while window.is_open() && ! window.is_key_down(minifb::Key::Escape) {
         let mut rng = rand::thread_rng();
         
+        // initial position
         let mut x: f64 = 0.00;
         let mut y: f64 = 0.00;
-
+        
+        // affine transformations
         let mut n: i32 = 1;
-        // Affine transformations
         while n < 10000 {
             let r: f64 = rng.gen();
             let x_next: f64; 
             let y_next: f64;
-
 
             if r < 0.01 {
                 x_next = 0.00;
@@ -50,18 +49,21 @@ fn main() {
 
             }
             
+            // assigning new position
             x = x_next;
             y = y_next;
 
+            // scaling points
             let x_pos: usize = (x * WIDTH as f64 / 10.0 + WIDTH as f64 / 2.0) as usize;
             let y_pos: usize = (y * HEIGHT as f64 / 12.0 + HEIGHT as f64 / 2.0 - 300.0) as usize;
 
-            
+            // flipping image due to how minifb does coordinates 
             let y_pos_flipped: usize = HEIGHT - y_pos - 1; 
             buffer[y_pos_flipped * WIDTH + x_pos] = 0x006400;
             
             n += 1;
         }
+        // update window
         window
             .update_with_buffer(&buffer, WIDTH, HEIGHT)
             .unwrap();

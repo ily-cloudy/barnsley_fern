@@ -5,7 +5,7 @@ const WIDTH: usize = 800;
 const HEIGHT: usize = 800;
 
 fn main() { 
-    // graphics set-up
+    // window things
     let mut buffer: Vec<u32> = vec![0; WIDTH * HEIGHT];
     let mut window = Window::new(
         "Barnsley Fractal",          
@@ -14,8 +14,6 @@ fn main() {
         WindowOptions::default(),   
     )
     .unwrap_or_else(|e| panic!("{}", e));
-    window.set_background_color(0, 0, 0);
-
 
     while window.is_open() && ! window.is_key_down(minifb::Key::Escape) {
         let mut rng = rand::thread_rng();
@@ -57,7 +55,7 @@ fn main() {
             let x_pos: usize = (x * WIDTH as f64 / 10.0 + WIDTH as f64 / 2.0) as usize;
             let y_pos: usize = (y * HEIGHT as f64 / 12.0 + HEIGHT as f64 / 2.0 - 300.0) as usize;
 
-            // flipping image due to how minifb does coordinates 
+            // flipping image due to how minifb does coordinates (cs plp smh)
             let y_pos_flipped: usize = HEIGHT - y_pos - 1; 
             buffer[y_pos_flipped * WIDTH + x_pos] = 0x006400;
             
